@@ -8,7 +8,8 @@ The plugin must be cloned locally (git clone https://github.com/iomax/homebridge
     npm install -g ./homebridge-mqttwindowblind
   
 # Release notes
-Version 0.0.1
+*** PAY ATTENTION : DON'T USE IT YET *** 
+Version 0.0.0
 + Initial draft
 
 # Configuration

@@ -1,26 +1,25 @@
-// MQTT GarageDoor Accessory plugin for HomeBridge
+// MQTT Window Blind  Accessory plugin for HomeBridge
 //
 // Remember to add accessory to config.json. Example:
 // "accessories": [
 //     {
-//            	"accessory": "mqttgaragedoor",
+//            	"accessory": "MqttWindowBlind",
 //            	"name": "NAME OF THE SWITCH",
 //            	"url": "URL OF THE BROKER",
 //  	      	"username": "USERNAME OF THE BROKER",
 //		"password": "PASSWORD OF THE BROKER"
 // 		"caption": "LABEL OF THE SWITCH",
 // 		"topics": {
-// 				"statusSet": 	"MQTT TOPIC FOR THE SETTING THE STATUS"
-// 				"openGet": 	"OPTIONAL MQTT TOPIC FOR THE GETTING THE STATUS OF OPEN SWITCH",
-// 				"closedGet": 	"OPTIONAL MQTT TOPIC FOR THE GETTING THE STATUS OF CLOSED SWITCH",
-//				"openStatusCmdTopic": "OPTIONAL MQTT TOPIC TO ASK OPEN STATUS",
-//				"openStatusCmd": "OPTIONAL THE STATUS COMMAND ( DEFAULT "")",
-//				"closeStatusCmdTopic": "OPTIONAL MQTT TOPIC TO ASK CLOSE STATUS",
-//				"closeStatusCmd": "OPTIONAL THE STATUS COMMAND (DEFAULT "")",
-// 				"openValue": 	"OPTIONAL VALUE THAT MEANS OPEN (DEFAULT true)"
-// 				"closedValue": 	"OPTIONAL VALUE THAT MEANS CLOSED (DEFAULT true)"
+//	                    "openSet":        "MQTT TOPIC FOR THE SETTING OF THE OPEN STATUS",
+//	                    "closeSet":       "MQTT TOPIC FOR THE SETTING OF THE CLOSE STATUS",
+//	                    "openSetValue":   "OPTIONAL openSet PAYLOAD (DEFAULT true)",
+//	                    "closeSetValue":  "OPTIONAL closeSet PAYLOAD (DEFAULT true)",
+//	                    "openGet":        "OPTIONAL MQTT TOPIC FOR THE GETTING THE STATUS OF CLOSED SWITCH",
+//	                    "closedGet":      "OPTIONAL MQTT TOPIC FOR THE GETTING THE STATUS OF CLOSED SWITCH",
+//	                    "openGetValue":   "OPTIONAL VALUE THAT MEANS OPEN (DEFAULT true)",
+//	                    "closedGetValue": "OPTIONAL VALUE THAT MEANS CLOSED (DEFAULT true)",
 // 			},
-//              "doorRunInSeconds": "OPEN/CLOSE RUN TIME IN SECONDS",
+//              "RunInSeconds": "OPEN/CLOSE RUN TIME IN SECONDS",
 //		"pauseInSeconds" : "IF DEFINED : AUTO CLOSE AFTER [Seconds]" 
 //     }
 // ],
@@ -34,7 +33,7 @@ var Service, Characteristic, DoorState;
 var mqtt = require("mqtt");
 
 
-function MqttGarageDoorAccessory(log, config) {
+function MqttWindowBlindAccessory(log, config) {
   	this.log          	= log;
   	this.name 		= config["name"];
   	this.url 		= config["url"];
@@ -59,8 +58,8 @@ function MqttGarageDoorAccessory(log, config) {
 	};
 
 	this.caption		= config["caption"];
-	this.topicOpenGet	= config["topics"].openGet;
-	this.topicClosedGet	= config["topics"].closedGet;
+	this.topicOpenSet	= config["topics"].openrSet;
+	this.topicCloseSet	= config["topics"].closedSet;
 	this.topicStatusSet	= config["topics"].statusSet;
 	this.OpenValue		= ( config["topics"].openValue !== undefined ) ? config["topics"].openValue : "true";
 	this.ClosedValue	= ( config["topics"].closedValue !== undefined ) ? config["topics"].closedValue : "true";
@@ -69,8 +68,7 @@ function MqttGarageDoorAccessory(log, config) {
 	this.closeStatusCmdTopic	= config["topics"].closeStatusCmdTopic;
 	this.closeStatusCmd	= ( config["topics"].closeStatusCmd !== undefined ) ? config["topics"].closeStatusCmd : "";
 
-	this.doorRunInSeconds = config["doorRunInSeconds"]; 
-	this.pauseInSeconds = config["pauseInSeconds"]; 
+	this.RunInSeconds = config["doorRunInSeconds"]; 
 
 	this.Running = false;
 	this.Closed = true;
@@ -149,10 +147,10 @@ module.exports = function(homebridge) {
   	Characteristic = homebridge.hap.Characteristic;
 	DoorState = homebridge.hap.Characteristic.CurrentDoorState;
   
-  	homebridge.registerAccessory("homebridge-mqttgaragedoor", "mqttgaragedoor", MqttGarageDoorAccessory);
+  	homebridge.registerAccessory("homebridge-MqttWindowBlind", "MqttWindowBlind", MqttWindowBlindAccessory);
 }
 
-MqttGarageDoorAccessory.prototype = {
+MqttWindowBlindAccessory.prototype = {
 	
 	doorStateReadable : function( doorState ) {
 		switch (doorState) {
